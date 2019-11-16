@@ -1,0 +1,4 @@
+numpy
+tensorflow
+tqdm
+bert-for-tf2
