@@ -4,7 +4,7 @@ BertTokenizer类
 """
 
 import tensorflow as tf
-from bert.tokenization import FullTokenizer
+from bert.tokenization.bert_tokenization import FullTokenizer
 
 
 class BertTokenizer(tf.keras.layers.Layer):

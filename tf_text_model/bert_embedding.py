@@ -22,6 +22,13 @@ class BertEmbedding(tf.keras.layers.Layer):
 
         self.bert = BertModelLayer.from_params(bert_params, name="bert")
 
+        input_ids = tf.keras.layers.Input(
+            shape=(bert_params.max_position_embeddings,),
+            dtype='int32', name="input_ids")
+        output = self.bert(input_ids)
+        model = tf.keras.Model(inputs=input_ids, outputs=output)
+        model.build(input_shape=(None, bert_params.max_position_embeddings))
+
         def _flatten_layers(root_layer):
             if isinstance(root_layer, tf.keras.layers.Layer):
                 yield root_layer
@@ -34,7 +41,6 @@ class BertEmbedding(tf.keras.layers.Layer):
 
         if model_dir is not None:
             bert_ckpt_file = os.path.join(model_dir, "bert_model.ckpt")
-            assert os.path.exists(bert_ckpt_file)
             load_stock_weights(self.bert, bert_ckpt_file)
 
     def compute_output_shape(self, input_shape):
@@ -48,3 +54,8 @@ class BertEmbedding(tf.keras.layers.Layer):
 
     def call(self, inputs, mask=None):
         return self.bert(inputs)
+
+
+if __name__ == "__main__":
+    bd = './chinese_L-12_H-768_A-12/'
+    BertEmbedding(bd, False, bd)
